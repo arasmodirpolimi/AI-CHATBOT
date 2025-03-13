@@ -47,7 +47,7 @@ function App() {
       <div className={styles.ChatContainer}>
         <Chat messages={messages}></Chat>
       </div>
-      <Controls onSend={handleContentSend} />
+      <Controls isDisabled={isLoading} onSend={handleContentSend} />
     </div>
   );
 }
