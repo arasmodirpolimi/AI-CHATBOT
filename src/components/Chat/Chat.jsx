@@ -1,5 +1,6 @@
 import Markdown from 'react-markdown'
 import styles from "./Chat.module.css";
+import { useEffect, useRef } from 'react';
 
 const WELCOME_MESSAGE = {
   role: 'assistant',
@@ -7,6 +8,12 @@ const WELCOME_MESSAGE = {
 }
 
 export function Chat({ messages }) {
+  const messegesEndRef = useRef(null)
+
+  useEffect(() => {
+    messegesEndRef.current?.scrollIntoView({ bahavior: "smooth"})
+  }, [messages])
+
   return (
     <div className={styles.Chat}>
       {[WELCOME_MESSAGE, ...messages].map(({ role, content }, index) => (
@@ -14,6 +21,7 @@ export function Chat({ messages }) {
           <Markdown>{content}</Markdown>
         </div>
       ))} 
+      <div ref={messegesEndRef} />
     </div>
   );
 }

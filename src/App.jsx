@@ -33,6 +33,8 @@ function App() {
         role: "system",
         content: "Sorry, I couldn't process your request. Please try again!",
       });
+      console.error("This is a system Error: ", error);
+      
     } finally {
       setIsLoading(false);
     }
