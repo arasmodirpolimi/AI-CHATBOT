@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Assistant } from "./assistants/googleai";
 import { Chat } from "./components/Chat/Chat";
 import { Controls } from "./components/Controls/Controls";
 import styles from "./App.module.css";
 
-const googleai = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_AI_API_KEY);
-const gemini = googleai.getGenerativeModel({ model: "gemini-1.5-flash" });
-const chat = gemini.startChat({ history: [] });
 
 function App() {
+  const assistant = new Assistant();
   const [messages, setMessages] = useState([]);
 
   function addMessage(message) {
@@ -22,10 +20,10 @@ function App() {
     });
 
     try {
-      const result = await chat.sendMessage(content);
+      const result = await assistant.chat(content);
       addMessage({
         role: "assistant",
-        content: result.response.text(),
+        content: result,
       });
     } catch (error) {
       addMessage({
