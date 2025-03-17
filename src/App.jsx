@@ -51,11 +51,11 @@ function App() {
     } catch (error) {
       addMessage({
         role: "system",
-        content: "Sorry, I couldn't process your request. Please try again!",
+        content: "Sorry, I couldn't process your request. Please referreing to the following error message: " + error.message,
       });
       setIsLoading(false);  
       setIsStreaming(false);
-      console.error("This is a system Error: ", error);
+      console.error("This is a system Error: ", error.message);
     }
   }
   return (

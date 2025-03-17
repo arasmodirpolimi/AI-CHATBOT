@@ -11,24 +11,15 @@ export class Assistant {
   }
 
   async chat(content) {
-    try {
-      const result = await this.#chat.sendMessage(content);
-      return result.response.text();
-    } catch (error) {
-      console.log("Error chat: ", error);
-    }
+    const result = await this.#chat.sendMessage(content);
+    return result.response.text();
   }
 
   async *chatStream(content) {
-    try {
-      const result = await this.#chat.sendMessageStream(content);
+    const result = await this.#chat.sendMessageStream(content);
 
-      for await (const chunk of result.stream) {
-        yield chunk.text();
-      }
-    } catch (error) {
-      console.log("Error chatStream: ", error);
-      
+    for await (const chunk of result.stream) {
+      yield chunk.text();
     }
   }
 }
