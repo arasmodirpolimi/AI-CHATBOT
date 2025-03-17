@@ -5,14 +5,24 @@ import { Chat } from "./components/Chat/Chat";
 import { Controls } from "./components/Controls/Controls";
 import styles from "./App.module.css";
 
-
 function App() {
   const assistant = new Assistant();
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
 
   function addMessage(message) {
     setMessages((prevMessages) => [...prevMessages, message]);
+  }
+
+  function updateLastMessageContent(content) {
+    setMessages((prevMessages) =>
+      prevMessages.map((message, index) =>
+        index === prevMessages.length - 1
+          ? { ...message, content: `${message.content}${content}` }
+          : message
+      )
+    );
   }
 
   async function handleContentSend(content) {
@@ -23,20 +33,29 @@ function App() {
     setIsLoading(true);
 
     try {
-      const result = await assistant.chat(content);
-      addMessage({
-        role: "assistant",
-        content: result,
-      });
+      const result = await assistant.chatStream(content);
+      let isFirstChunk = false;
+
+      for await (const chunck of result) {
+        if (!isFirstChunk) {
+          isFirstChunk = true;
+          addMessage({ content: "", role: "assistant" });
+          setIsLoading(false);
+          setIsStreaming(true); 
+        }
+
+        updateLastMessageContent(chunck)
+      }
+
+      setIsStreaming(false);
     } catch (error) {
       addMessage({
         role: "system",
         content: "Sorry, I couldn't process your request. Please try again!",
       });
+      setIsLoading(false);  
+      setIsStreaming(false);
       console.error("This is a system Error: ", error);
-      
-    } finally {
-      setIsLoading(false);
     }
   }
   return (
@@ -49,7 +68,7 @@ function App() {
       <div className={styles.ChatContainer}>
         <Chat messages={messages}></Chat>
       </div>
-      <Controls isDisabled={isLoading} onSend={handleContentSend} />
+      <Controls isDisabled={isLoading || isStreaming} onSend={handleContentSend} />
     </div>
   );
 }
