@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { Assistant } from "./assistants/deepseekai";
 import { Loader } from "./components/Loader/Loader";
-import { Assistant } from "./assistants/googleai";
 import { Chat } from "./components/Chat/Chat";
 import { Controls } from "./components/Controls/Controls";
 import styles from "./App.module.css";
@@ -10,10 +10,6 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
-
-  function addMessage(message) {
-    setMessages((prevMessages) => [...prevMessages, message]);
-  }
 
   function updateLastMessageContent(content) {
     setMessages((prevMessages) =>
@@ -25,26 +21,26 @@ function App() {
     );
   }
 
-  async function handleContentSend(content) {
-    addMessage({
-      role: "user",
-      content,
-    });
-    setIsLoading(true);
+  function addMessage(message) {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  }
 
+  async function handleContentSend(content) {
+    addMessage({ content, role: "user" });
+    setIsLoading(true);
     try {
-      const result = await assistant.chatStream(content);
+      const result = await assistant.chatStream(content, messages);
       let isFirstChunk = false;
 
-      for await (const chunck of result) {
+      for await (const chunk of result) {
         if (!isFirstChunk) {
           isFirstChunk = true;
           addMessage({ content: "", role: "assistant" });
           setIsLoading(false);
-          setIsStreaming(true); 
+          setIsStreaming(true);
         }
 
-        updateLastMessageContent(chunck)
+        updateLastMessageContent(chunk);
       }
 
       setIsStreaming(false);
@@ -58,6 +54,7 @@ function App() {
       console.error("This is a system Error: ", error.message);
     }
   }
+
   return (
     <div className={styles.App}>
       {isLoading && <Loader />}
@@ -66,9 +63,12 @@ function App() {
         <h2 className={styles.Title}>AI Chatbot</h2>
       </header>
       <div className={styles.ChatContainer}>
-        <Chat messages={messages}></Chat>
+        <Chat messages={messages} />
       </div>
-      <Controls isDisabled={isLoading || isStreaming} onSend={handleContentSend} />
+      <Controls
+        isDisabled={isLoading || isStreaming}
+        onSend={handleContentSend}
+      />
     </div>
   );
 }
