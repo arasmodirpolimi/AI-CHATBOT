@@ -11,9 +11,9 @@ Currently, two official plugins are available:
 
 If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
-# AI-Enhanced Chatbot using React, OpenAI, and Google Gemini
+# AI-Enhanced Chatbot using React, OpenAI, Google Gemini, and Deep Seek
 
-This project is a modern, AI-powered chatbot application built with **React** and integrated with both **OpenAI's GPT API** and **Google Gemini**, enabling intelligent, real-time conversational experiences on the web.
+This project is a modern, AI-powered chatbot application built with **React** and integrated with both **OpenAI's GPT API** and **Google Gemini**, and **Deep Seek** enabling intelligent, real-time conversational experiences on the web.
 
 ## 🚀 Project Overview
 
@@ -21,7 +21,7 @@ Developed as part of my AI/NLP work, this chatbot leverages powerful language mo
 
 ## 🔍 Features
 
-- 💬 Natural Language Understanding via GPT & Gemini
+- 💬 Natural Language Understanding via GPT & Gemini & DeepSeek
 - 🌐 Fully responsive frontend with React
 - 🔄 Asynchronous chat interaction with streaming responses
 - 🔐 Environment variable configuration for secure API key management
